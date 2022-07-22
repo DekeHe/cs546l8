@@ -8,9 +8,9 @@ async function addUser(firstName, lastName)
 	const userCollection=await getUserCollectionF()
 
 	let newUser={
+		_id:uuid(),
 		firstName:firstName,
 		lastName:lastName,
-		_id:uuid(),
 		posts:[]
 	}
 

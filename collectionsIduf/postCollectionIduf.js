@@ -4,32 +4,6 @@ const collections=require('../config/collections')
 const posts=collections.getPostCollectionF
 const getUserCollectionF=require('./userCollectionIduf')
 
-
-
-async function getAllPosts()
-{
-	const postCollection=await posts()
-	return await postCollection.find().toArray()
-}
-
-
-async function getPostsByTag(tag)
-{
-	if (!tag)throw 'No tag provided'
-
-	const postCollection=await posts()
-	return await postCollection.find({tags:tag}).toArray()
-}
-
-async function getPostById(id)
-{
-	const postCollection=await posts()
-	const post=await postCollection.findOne({_id:id})
-
-	if (!post)throw 'Post not found'
-	return post
-}
-
 async function addPost(title,body,tags,posterId)
 {
 	if (typeof title !== 'string')throw 'No title provided'
@@ -44,14 +18,16 @@ async function addPost(title,body,tags,posterId)
 	const userThatPosted=await getUserCollectionF.getUserById(posterId)
 
 	const newPost={
+		_id:uuid(),
 		title:title,
 		body:body,
+		
+		tags:tags,
 		poster:{
 			id:posterId,
 			name:`${userThatPosted.firstName} ${userThatPosted.lastName}`
 		},
-		tags:tags,
-		_id:uuid()
+		
 	}
 
 	const newInsertInformation=await postCollection.insertOne(newPost)
@@ -125,6 +101,29 @@ async function renameTag(oldTag,newTag)
 	return await this.getPostsByTag(newTag)
 }
 
+async function getAllPosts()
+{
+	const postCollection=await posts()
+	return await postCollection.find().toArray()
+}
+
+
+async function getPostsByTag(tag)
+{
+	if (!tag)throw 'No tag provided'
+
+	const postCollection=await posts()
+	return await postCollection.find({tags:tag}).toArray()
+}
+
+async function getPostById(id)
+{
+	const postCollection=await posts()
+	const post=await postCollection.findOne({_id:id})
+
+	if (!post)throw 'Post not found'
+	return post
+}
 
 module.exports=
 {
