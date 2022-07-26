@@ -22,7 +22,6 @@ async function f()
 	)
         _db=await _connection.db(dbName)
     }
-
     return _db
 }
 

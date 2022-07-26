@@ -2,7 +2,7 @@ const uuid=require('uuid/v4')
 
 const collections=require('../config/collections')
 const posts=collections.getPostCollectionF
-const getUserCollectionF=require('./userCollectionIduf')
+const userCollectoinIduf=require('./userCollectionIduf')
 
 async function addPost(title,body,tags,posterId)
 {
@@ -15,7 +15,7 @@ async function addPost(title,body,tags,posterId)
 
 	const postCollection=await posts()
 
-	const userThatPosted=await getUserCollectionF.getUserById(posterId)
+	const userThatPosted=await userCollectoinIduf.getUserById(posterId)
 
 	const newPost={
 		_id:uuid(),
@@ -33,7 +33,7 @@ async function addPost(title,body,tags,posterId)
 	const newInsertInformation=await postCollection.insertOne(newPost)
 	const newId=newInsertInformation.insertedId
 
-	await getUserCollectionF.addPostToUser(posterId,newId,title)
+	await userCollectoinIduf.addPostToUser(posterId,newId,title)
 
 	return await this.getPostById(newId)
 }
@@ -49,10 +49,7 @@ async function removePost(id)
 		return
 	}
 	const deletionInfo=await postCollection.removeOne({_id:id})
-	if (deletionInfo.deletedCount === 0){
-		throw `Could not delete post with id of ${id}`
-	}
-	await getUserCollectionF.removePostFromUser(post.poster.id,id)
+	await userCollectoinIduf.removePostFromUser(post.poster.id,id)
 	return true
 }
 
@@ -110,8 +107,6 @@ async function getAllPosts()
 
 async function getPostsByTag(tag)
 {
-	if (!tag)throw 'No tag provided'
-
 	const postCollection=await posts()
 	return await postCollection.find({tags:tag}).toArray()
 }
@@ -120,8 +115,6 @@ async function getPostById(id)
 {
 	const postCollection=await posts()
 	const post=await postCollection.findOne({_id:id})
-
-	if (!post)throw 'Post not found'
 	return post
 }
 
