@@ -2,8 +2,6 @@ const connection=require('./connection')
 
 function getCollection(collectionName)
 {
-	
-	
 	async function f()
 	{
 		let _collection=undefined

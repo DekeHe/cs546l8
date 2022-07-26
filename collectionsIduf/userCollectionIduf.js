@@ -27,18 +27,11 @@ async function removeUser(id)
 
 async function updateUser(id, updatedUser)
 {
-	const user=await this.getUserById(id)
-	console.log(user)
-
-	let userUpdateInfo={
-		firstName:updatedUser.firstName,
-		lastName:updatedUser.lastName
-	}
 
 	const userCollection=await getUserCollectionF()
 	const updateInfo=await userCollection.updateOne(
 		{_id:id} ,
-		{$set:userUpdateInfo}
+		{$set:updatedUser}
 	)
 	return await this.getUserById(id)
 }
@@ -47,7 +40,7 @@ async function addPostToUser(userId, postId, postTitle)
 {
 	let currentUser=await this.getUserById(userId)
 	console.log(currentUser)
-
+	
 	const userCollection=await getUserCollectionF()
 	const updateInfo=await userCollection.updateOne(
 		{_id:userId},
@@ -58,9 +51,6 @@ async function addPostToUser(userId, postId, postTitle)
 
 async function removePostFromUser(userId, postId)
 {
-	let currentUser=await this.getUserById(userId)
-	console.log(currentUser)
-
 	const userCollection=await getUserCollectionF()
 	const updateInfo=await userCollection.updateOne(
 		{_id:userId},
